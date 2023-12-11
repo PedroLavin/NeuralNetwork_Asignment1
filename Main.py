@@ -28,7 +28,7 @@ def local_potential(w, vector, label):
 def update_weights(w, vector, label):
 
   for i in range(len(w)):
-    w[i] = w[i] + vector[i]*label/5
+    w[i] = w[i] + vector[i]*label/N
   
 # Function that indicates the number of correctly classified datapoints
 def evaluate_perceptron(w, data):
