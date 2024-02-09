@@ -60,14 +60,18 @@ def model(input, label, weights, epochs, learning_rate, test_input, test_label):
   for i in range(epochs):
 
 
-    # Iterate through all of the inputs and change the weights
-    for j in range(len(input)):
-      change(weights, input[j], label[j], learning_rate)
+    # Select a random input and update the weights with the chosen input
 
+    random_input = random.randint(0, len(input)-1)
+
+      # change(weights, input[j], label[j], (time_rate(learning_rate, i)))
+    change(weights, input[random_input], label[random_input], learning_rate)
+    # if i % int(epochs/10) == 0:
+
+    # Record the E and E_test
     E.append(test(input, label, weights))
     E_test.append(test(test_input, test_label, weights))
   return E, E_test
-
 def test(inputs, labels, weights):
   E = 0
   for i in range(len(inputs)):
@@ -79,11 +83,12 @@ def test(inputs, labels, weights):
 initial_weights = []
 for i in range(2):
   column = []
-  for j in range(len(inputs[0])):
+  for j in range(50):
     column.append(random.random())
   initial_weights.append(column)
 
-E, E_test = model(inputs[0:100], labels[0:100], initial_weights, 100, 0.9, inputs[100:500], labels[100:500])
+learning_rate = 0.05
+E, E_test = model(inputs[0:500], labels[0:500], initial_weights, 2000, learning_rate, inputs[500:600], labels[500:600])
 
 plt.plot(E, label = "Training Error")
 plt.plot(E_test, label = "Testing Error")
