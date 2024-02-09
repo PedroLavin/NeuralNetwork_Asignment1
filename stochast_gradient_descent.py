@@ -1,9 +1,3 @@
-# Robert Power
-# s5332419
-# Neural Networks and Computational Intelligence
-# Assignment 3
-# Stochastic Gradient Descent (SGD)
-
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -74,7 +68,7 @@ class FFNN:
         for t in range(tmax):
             # Randomly select one example
             idx = np.random.randint(N)
-            X_sample = X_train[:, idx]
+            X_sample = X_train[idx, :]
             y_sample = y_train[idx]
 
             # Forward pass
@@ -86,11 +80,9 @@ class FFNN:
             error = output - y_sample
 
             # Backpropagation
-            # grad_w2 = error * a
             grad_w1 = np.outer((1 - np.square(a)) * self.w2 * error, X_sample)
 
             # Update weights
-            # self.w2 -= self.learning_rate * grad_w2
             self.w1 -= self.learning_rate * grad_w1
 
             # Compute E (training error)
@@ -107,7 +99,7 @@ class FFNN:
         P = X.shape[1]
         total_error = 0
         for i in range(P):
-            output = self.forward_pass(X[:, i])
+            output = self.forward_pass(X[i, :])
             total_error += (output - y[i]) ** 2
         return total_error / (2 * P)
 
@@ -123,8 +115,8 @@ def run_simulations(num_runs, P, Q, K, lr):
     x_test = x[P:P+Q]
     y_test = y[P:P+Q]
 
-    n = x_train.shape[0]
-    t = x_train.shape[1] * 10
+    N = x_train.shape[1]
+    t = x_train.shape[0] * 10
 
     # Perform simulations over the specified number of independent runs
     E_avg_history = np.zeros(t)
@@ -132,7 +124,7 @@ def run_simulations(num_runs, P, Q, K, lr):
 
     for run in range(num_runs):
         # Train the model
-        model = FFNN(n, K, lr)
+        model = FFNN(N, K, lr)
         E_history, Etest_history = model.fit(x_train, y_train, x_test, y_test, t)
 
         # Accumulate error histories
@@ -155,8 +147,10 @@ def run_simulations(num_runs, P, Q, K, lr):
     # Display final weight vectors (Note: These will be from the last run)
     print("Final weight vector w1:")
     print(model.w1)
+    print(model.w1.shape)
     print("Final weight vector w2:")
     print(model.w2)
+    print(model.w2.shape)
 
 
 # Dataset Hyperparameters
@@ -169,4 +163,3 @@ K = 2
 lr = 0.05
 
 run_simulations(runs, P, Q, K, lr)
-
